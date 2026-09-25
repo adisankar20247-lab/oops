@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-SCAN // Automated Website Security & Health Intelligence</title>
+    <meta name="description" content="High-performance dynamic website scanner analyzing server response latency, security headers, SSL certificate integrity, and broken links in real time.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="cyber-grid-overlay"></div>
+    <div class="cyber-glow-orb orb-1"></div>
+    <div class="cyber-glow-orb orb-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <circle cx="12" cy="11" r="3"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">CYBER-SCAN</span>
+                    <span class="brand-subtitle">SECURITY &amp; HEALTH ANALYZER</span>
+                </div>
+            </div>
+            <div class="nav-status">
+                <span class="status-indicator"></span>
+                <span class="status-text">SCAN ENGINE ACTIVE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Hero & Scanner Input Section -->
+        <section class="hero-section">
+            <div class="hero-badge">ENTERPRISE-GRADE WEBSITE DIAGNOSTICS</div>
+            <h1 class="hero-title">Automated Website Security &amp; Latency Scanner</h1>
+            <p class="hero-description">
+                Inspect latency benchmarks, audit critical HTTP security headers, verify TLS/SSL certificate chains, and probe DOM anchor health with zero friction.
+            </p>
+
+            <div class="scanner-card">
+                <form id="scanForm" class="scanner-form" onsubmit="return false;">
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </span>
+                        <input type="text" id="targetUrlInput" class="url-input" 
+                               placeholder="https://example.com" 
+                               aria-label="Website URL"
+                               autocomplete="off" spellcheck="false" />
+                        <button type="submit" id="scanBtn" class="scan-button">
+                            <span class="btn-text">Scan Website</span>
+                            <span class="btn-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Sample Presets -->
+                <div class="presets-row">
+                    <span class="presets-label">Test Targets:</span>
+                    <button type="button" class="preset-pill" data-url="https://example.com">example.com</button>
+                    <button type="button" class="preset-pill" data-url="https://google.com">google.com</button>
+                    <button type="button" class="preset-pill" data-url="https://github.com">github.com</button>
+                    <button type="button" class="preset-pill" data-url="http://httpstat.us/200">httpstat.us (HTTP)</button>
+                </div>
+
+                <!-- Alert Feedback Box -->
+                <div id="alertBox" class="alert-box hidden" role="alert">
+                    <span class="alert-icon" id="alertIcon">⚠️</span>
+                    <div class="alert-content">
+                        <strong id="alertTitle">Notice</strong>
+                        <span id="alertMessage">Please provide a valid URL.</span>
+                    </div>
+                    <button type="button" id="alertCloseBtn" class="alert-close" aria-label="Dismiss alert">&times;</button>
+                </div>
+
+                <!-- Loading State & Progress -->
+                <div id="loadingContainer" class="loading-container hidden">
+                    <div class="radar-spinner">
+                        <div class="radar-pulse"></div>
+                    </div>
+                    <div class="loading-details">
+                        <div class="loading-heading" id="loadingStage">Initializing diagnostic modules...</div>
+                        <div class="loading-sub" id="loadingTargetUrl">https://example.com</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="progressBarFill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Dashboard Section -->
+        <section id="resultsSection" class="results-section hidden">
+            <div class="results-header">
+                <div class="results-meta">
+                    <div class="results-target">
+                        <span class="meta-label">SCANNED TARGET:</span>
+                        <a id="resScannedUrl" href="#" target="_blank" rel="noopener noreferrer" class="meta-url"></a>
+                    </div>
+                    <div class="results-final" id="resFinalUrlWrapper">
+                        <span class="meta-label">RESOLVED REDIRECT:</span>
+                        <span id="resFinalUrl" class="meta-final"></span>
+                    </div>
+                </div>
+                <div class="results-actions">
+                    <span id="resScanTimestamp" class="scan-time-badge"></span>
+                    <button type="button" id="reScanBtn" class="action-btn">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        Re-scan
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4 Module Cards Grid -->
+            <div class="cards-grid">
+                <!-- Card 1: Server Response Time -->
+                <div class="dashboard-card card-latency" id="cardLatency">
+                    <div class="card-header">
+                        <div class="card-icon-wrap icon-cyan">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="card-title-group">
+                            <span class="card-category">MODULE 01</span>
+                            <h2 class="card-title">SERVER RESPONSE TIME</h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-hero">
+                            <span class="metric-number" id="cardLatencyVal">--</span>
+                            <span class="metric-unit">ms</span>
+                        </div>
+                        <div class="metric-tags">
+                            <span class="badge" id="cardLatencyBadge">Fast</span>
+                            <span class="badge badge-subtle" id="cardHttpCodeBadge">HTTP 200</span>
+                        </div>
+                        <div class="metric-detail-list">
+                            <div class="detail-row">
+                                <span class="d-label">Classification:</span>
+                                <span class="d-val" id="cardLatencyClassification">--</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="d-label">HTTP Status:</span>
+                                <span class="d-val" id="cardHttpStatusText">--</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="d-label">Scope:</span>
+                                <span class="d-val hint-text">Round-trip connection time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Security Headers -->
+                <div class="dashboard-card card-headers" id="cardHeaders">
+                    <div class="card-header">
+                        <div class="card-icon-wrap icon-emerald">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title-group">
+                            <span class="card-category">MODULE 02</span>
+                            <h2 class="card-title">SECURITY HEADERS</h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-hero">
+                            <span class="metric-number" id="cardHeadersCount">0 / 8</span>
+                            <span class="metric-unit">Present</span>
+                        </div>
+                        <div class="metric-tags">
+                            <span class="badge" id="cardHeadersBadge">Audit Ready</span>
+                        </div>
+                        <div class="metric-detail-list">
+                            <div class="detail-row">
+                                <span class="d-label">HSTS Enforced:</span>
+                                <span class="d-val" id="cardHstsStatus">--</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="d-label">CSP Configured:</span>
+                                <span class="d-val" id="cardCspStatus">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="view-details-btn" id="openHeadersModalBtn">
+                            View Header Details &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3: SSL Certificate -->
+                <div class="dashboard-card card-ssl" id="cardSsl">
+                    <div class="card-header">
+                        <div class="card-icon-wrap icon-purple">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title-group">
+                            <span class="card-category">MODULE 03</span>
+                            <h2 class="card-title">SSL / TLS CERTIFICATE</h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-hero">
+                            <span class="metric-number" id="cardSslStatus">Valid</span>
+                        </div>
+                        <div class="metric-tags">
+                            <span class="badge" id="cardSslDaysBadge">-- days remaining</span>
+                            <span class="badge" id="cardSslMatchBadge">Hostname Match &check;</span>
+                        </div>
+                        <div class="metric-detail-list">
+                            <div class="detail-row">
+                                <span class="d-label">Issuer:</span>
+                                <span class="d-val text-truncate" id="cardSslIssuer" title="">--</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="d-label">Valid Until:</span>
+                                <span class="d-val" id="cardSslValidUntil">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="view-details-btn" id="openSslModalBtn">
+                            View Certificate Details &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 4: Broken Links -->
+                <div class="dashboard-card card-links" id="cardLinks">
+                    <div class="card-header">
+                        <div class="card-icon-wrap icon-rose">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title-group">
+                            <span class="card-category">MODULE 04</span>
+                            <h2 class="card-title">BROKEN LINK SCANNER</h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="metric-hero">
+                            <span class="metric-number text-rose" id="cardBrokenCount">0</span>
+                            <span class="metric-unit">Broken / <span id="cardTotalLinksCount">0</span> Total</span>
+                        </div>
+                        <div class="metric-tags">
+                            <span class="badge" id="cardLinksBadge">0 Working</span>
+                        </div>
+                        <div class="metric-detail-list">
+                            <div class="detail-row">
+                                <span class="d-label">Working Rate:</span>
+                                <span class="d-val" id="cardLinksRate">100%</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="d-label">Crawl Scope:</span>
+                                <span class="d-val hint-text">Discovered anchor tags (max 50)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="view-details-btn" id="openLinksModalBtn">
+                            View Link Table &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scan History Section -->
+        <section class="history-section">
+            <div class="section-header-row">
+                <div>
+                    <h2 class="section-title">Scan History</h2>
+                    <p class="section-subtitle">Persisted audit reports stored in the database</p>
+                </div>
+                <button type="button" id="refreshHistoryBtn" class="action-btn">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+
+            <div class="table-container history-table-container">
+                <table class="cyber-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Date</th>
+                            <th>Response</th>
+                            <th>SSL</th>
+                            <th>Headers</th>
+                            <th>Links</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">Loading scan history...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal 1: Security Headers Modal -->
+    <div id="headersModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <h3 class="modal-title">HTTP Security Headers Inspection</h3>
+                    <span class="modal-subtitle" id="headersModalRatio">Found 0 of 8</span>
+                </div>
+                <button type="button" class="modal-close" data-close="headersModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="cyber-table">
+                    <thead>
+                        <tr>
+                            <th>Security Header</th>
+                            <th>Status</th>
+                            <th>Detected Header Value / Control Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody id="headersTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: SSL Certificate Modal -->
+    <div id="sslModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <h3 class="modal-title">TLS/SSL Certificate Full Inspection</h3>
+                    <span class="modal-subtitle" id="sslModalHost">example.com</span>
+                </div>
+                <button type="button" class="modal-close" data-close="sslModal">&times;</button>
+            </div>
+            <div class="modal-body" id="sslModalBody">
+                <div class="cert-grid">
+                    <div class="cert-item">
+                        <span class="cert-label">Certificate Status</span>
+                        <span class="cert-value" id="sslDetailStatus">--</span>
+                    </div>
+                    <div class="cert-item">
+                        <span class="cert-label">Hostname Match</span>
+                        <span class="cert-value" id="sslDetailMatch">--</span>
+                    </div>
+                    <div class="cert-item">
+                        <span class="cert-label">Issuer</span>
+                        <span class="cert-value" id="sslDetailIssuer">--</span>
+                    </div>
+                    <div class="cert-item">
+                        <span class="cert-label">Subject</span>
+                        <span class="cert-value" id="sslDetailSubject">--</span>
+                    </div>
+                    <div class="cert-item">
+                        <span class="cert-label">Valid From</span>
+                        <span class="cert-value" id="sslDetailValidFrom">--</span>
+                    </div>
+                    <div class="cert-item">
+                        <span class="cert-label">Valid Until</span>
+                        <span class="cert-value" id="sslDetailValidUntil">--</span>
+                    </div>
+                    <div class="cert-item">
+                        <span class="cert-label">Days Remaining</span>
+                        <span class="cert-value" id="sslDetailDaysRemaining">--</span>
+                    </div>
+                    <div class="cert-item">
+                        <span class="cert-label">Signature Algorithm</span>
+                        <span class="cert-value" id="sslDetailSignature">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Broken Links Modal -->
+    <div id="linksModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <h3 class="modal-title">Broken Link Scanner Details</h3>
+                    <span class="modal-subtitle" id="linksModalSubtitle">Target Anchor Scan</span>
+                </div>
+                <button type="button" class="modal-close" data-close="linksModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="disclaimer-callout" id="linksNoticeText">
+                    Checks links discovered on the supplied page. This is not a recursive crawl of the entire website.
+                </div>
+                <div class="table-container">
+                    <table class="cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Discovered URL</th>
+                                <th>Status</th>
+                                <th>HTTP Code</th>
+                            </tr>
+                        </thead>
+                        <tbody id="linksTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>CyberScan Website Diagnostics Platform &bull; Java Spring Boot &bull; REST API &bull; MySQL Database</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
