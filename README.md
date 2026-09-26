@@ -159,7 +159,36 @@ http://localhost:8080
 
 ---
 
-## 5. REST API Documentation
+## 5. Cloud Deployment (Render / Railway / Docker)
+
+The repository includes automated cloud deployment manifests ([`Dockerfile`](file:///Dockerfile), [`render.yaml`](file:///render.yaml), and [`docker-compose.yml`](file:///docker-compose.yml)).
+
+### Option A: 1-Click Deploy on Render (Free Tier)
+1. Go to **[render.com](https://render.com)** and sign in with GitHub.
+2. Click **New +** → **Blueprint** (or **Web Service**).
+3. Connect your GitHub repository: `https://github.com/adisankar20247-lab/oops`.
+4. Render automatically detects [`render.yaml`](file:///render.yaml) and the multi-stage [`Dockerfile`](file:///Dockerfile).
+5. Click **Apply / Deploy**. Render will build the container and deploy your live scanner on a free `https://<app-name>.onrender.com` URL!
+
+> **Database Note**: The default profile runs with zero-dependency embedded H2 (`SPRING_PROFILES_ACTIVE=h2`). If you provision a managed MySQL database on Render or Aiven, simply add environment variables `SPRING_PROFILES_ACTIVE=mysql`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`.
+
+### Option B: 1-Click Deploy on Railway
+1. Go to **[railway.app](https://railway.app)** and log in with GitHub.
+2. Click **New Project** → **Deploy from GitHub repo**.
+3. Select `adisankar20247-lab/oops`.
+4. Railway will automatically detect the Dockerfile, build the image, bind the dynamic `$PORT`, and provide a public HTTPS URL.
+5. (Optional) To add MySQL on Railway: Click **+ New** → **Database** → **Add MySQL**, then link MySQL variables to your scanner service.
+
+### Option C: Containerized Run with Docker Compose
+Run the app and MySQL 8.0 together locally or on a VPS with one command:
+```bash
+docker compose up --build -d
+```
+The dashboard will be live at `http://localhost:8080`.
+
+---
+
+## 6. REST API Documentation
 
 ### 1. Perform Scan
 - **Method:** `POST`
@@ -252,7 +281,7 @@ curl -X POST http://localhost:8080/api/scan \
 
 ---
 
-## 6. Security & Anti-Abuse Controls
+## 7. Security & Anti-Abuse Controls
 
 The application enforces strict enterprise-grade security filters (`UrlValidator.java` & `SafeHttpHelper.java`):
 

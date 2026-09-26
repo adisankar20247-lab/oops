@@ -204,24 +204,24 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({ url: normalizedUrl })
         })
-        .then(async (response) => {
-            const data = await response.json();
-            if (!response.ok) {
-                const errorMsg = data.message || data.error || 'Server returned an error status: ' + response.status;
-                throw new Error(errorMsg);
-            }
-            return data;
-        })
-        .then((data) => {
-            stopLoading();
-            currentScanData = data;
-            renderDashboard(data);
-            loadScanHistory();
-        })
-        .catch((error) => {
-            stopLoading();
-            showAlert('Scan Failed', error.message || 'Unable to connect to the target website. The server may be unavailable or the URL may be invalid.', '❌');
-        });
+            .then(async (response) => {
+                const data = await response.json();
+                if (!response.ok) {
+                    const errorMsg = data.message || data.error || 'Server returned an error status: ' + response.status;
+                    throw new Error(errorMsg);
+                }
+                return data;
+            })
+            .then((data) => {
+                stopLoading();
+                currentScanData = data;
+                renderDashboard(data);
+                loadScanHistory();
+            })
+            .catch((error) => {
+                stopLoading();
+                showAlert('Scan Failed', error.message || 'Unable to connect to the target website. The server may be unavailable or the URL may be invalid.', '❌');
+            });
     }
 
     // Loading State & Progress Animation
