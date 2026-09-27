@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const linksNoticeText = document.getElementById('linksNoticeText');
 
     // State
+    const API_BASE = window.API_BASE_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://website-scanner-drbu.onrender.com');
     let currentScanData = null;
     let progressTimer = null;
 
@@ -197,31 +198,34 @@ document.addEventListener('DOMContentLoaded', () => {
         startLoading(normalizedUrl);
 
         // Send POST request to backend
-        fetch('/api/scan', {
+        fetch(`${API_BASE}/api/scan`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ url: normalizedUrl })
         })
-        .then(async (response) => {
-            const data = await response.json();
-            if (!response.ok) {
-                const errorMsg = data.message || data.error || 'Server returned an error status: ' + response.status;
-                throw new Error(errorMsg);
-            }
-            return data;
-        })
-        .then((data) => {
-            stopLoading();
-            currentScanData = data;
-            renderDashboard(data);
-            loadScanHistory();
-        })
-        .catch((error) => {
-            stopLoading();
-            showAlert('Scan Failed', error.message || 'Unable to connect to the target website. The server may be unavailable or the URL may be invalid.', '❌');
-        });
+            .then(async (response) => {
+                if (response.status === 404) {
+                    throw new Error('Backend API (/api/scan) not found. When deploying static frontend on Netlify or Vercel, connect it to your Spring Boot backend or configure redirects/rewrites in netlify.toml or vercel.json.');
+                }
+                const data = await response.json();
+                if (!response.ok) {
+                    const errorMsg = data.message || data.error || 'Server returned an error status: ' + response.status;
+                    throw new Error(errorMsg);
+                }
+                return data;
+            })
+            .then((data) => {
+                stopLoading();
+                currentScanData = data;
+                renderDashboard(data);
+                loadScanHistory();
+            })
+            .catch((error) => {
+                stopLoading();
+                showAlert('Scan Failed', error.message || 'Unable to connect to the target website. The server may be unavailable or the URL may be invalid.', '❌');
+            });
     }
 
     // Loading State & Progress Animation
@@ -475,8 +479,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Scan History CRUD
     function loadScanHistory() {
-        fetch('/api/scans')
-            .then(res => res.json())
+        fetch(`${API_BASE}/api/scans`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
             .then(scans => {
                 renderHistoryTable(scans);
             })
@@ -534,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function fetchScanDetails(id) {
-        fetch(`/api/scans/${id}`)
+        fetch(`${API_BASE}/api/scans/${id}`)
             .then(res => {
                 if (!res.ok) throw new Error('Scan not found');
                 return res.json();
@@ -554,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(`/api/scans/${id}`, { method: 'DELETE' })
+        fetch(`${API_BASE}/api/scans/${id}`, { method: 'DELETE' })
             .then(res => {
                 if (!res.ok) throw new Error('Failed to delete scan record');
                 loadScanHistory();

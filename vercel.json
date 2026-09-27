@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "outputDirectory": "src/main/resources/static",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://website-scanner-drbu.onrender.com/api/:path*"
+    }
+  ]
+}

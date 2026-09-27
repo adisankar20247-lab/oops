@@ -1,6 +1,9 @@
 {
-  "name": "oops",
-  "lockfileVersion": 3,
-  "requires": true,
-  "packages": {}
+  "name": "cyber-scan-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automated Website Security & Latency Scanner Dashboard",
+  "scripts": {
+    "build": "echo Dashboard ready"
+  }
 }

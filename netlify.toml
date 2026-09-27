@@ -1,0 +1,21 @@
+# Netlify Configuration for Cyber-Scan Dashboard
+
+[build]
+  publish = "src/main/resources/static"
+  command = "npm run build"
+
+# Security & Best-Practice Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Backend API Proxy to Render Backend
+[[redirects]]
+  from = "/api/*"
+  to = "https://website-scanner-drbu.onrender.com/api/:splat"
+  status = 200
+  force = true
