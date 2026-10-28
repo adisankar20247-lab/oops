@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3.0">
 </head>
 <body>
     <div class="cyber-grid-overlay"></div>
@@ -76,6 +76,7 @@
                 <!-- Sample Presets -->
                 <div class="presets-row">
                     <span class="presets-label">Test Targets:</span>
+                    <button type="button" class="preset-pill preset-demo" id="demoAuditBtn">⚡ Sample Audit (82 / 75 / 100 / 94)</button>
                     <button type="button" class="preset-pill" data-url="https://example.com">example.com</button>
                     <button type="button" class="preset-pill" data-url="https://google.com">google.com</button>
                     <button type="button" class="preset-pill" data-url="https://github.com">github.com</button>
@@ -133,7 +134,174 @@
                 </div>
             </div>
 
-            <!-- 4 Module Cards Grid -->
+            <!-- Executive Diagnostic Scorecard & Benchmark Bars Feature -->
+            <div class="scorecard-container" id="diagnosticScorecard">
+                <div class="scorecard-header">
+                    <div class="scorecard-title-group">
+                        <div class="scorecard-badge">SYSTEM DIAGNOSTIC BENCHMARK</div>
+                        <h2 class="scorecard-title">Security &amp; Performance Health Matrix</h2>
+                    </div>
+                    <div class="scorecard-actions">
+                        <button type="button" id="copyAsciiBtn" class="scorecard-btn" title="Copy ASCII block summary to clipboard">
+                            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span id="copyAsciiBtnText">Copy ASCII Bars</span>
+                        </button>
+                        <button type="button" id="toggleTerminalBtn" class="scorecard-btn" title="Toggle Raw Terminal View">
+                            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                                <polyline points="4 17 10 11 4 5"></polyline>
+                                <line x1="12" y1="19" x2="20" y2="19"></line>
+                            </svg>
+                            <span>Terminal View</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="scorecard-grid">
+                    <!-- Left: Overall Health Index Ring -->
+                    <div class="scorecard-overall-card">
+                        <div class="overall-label">OVERALL HEALTH INDEX</div>
+                        <div class="overall-ring-container">
+                            <svg class="overall-ring-svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+                                <circle class="ring-bg" cx="60" cy="60" r="50" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="8"></circle>
+                                <circle class="ring-fill" id="overallRingFill" cx="60" cy="60" r="50" fill="none" stroke="var(--cyber-cyan)" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="38"></circle>
+                            </svg>
+                            <div class="overall-score-display">
+                                <span class="overall-score-val" id="overallScoreVal">88</span>
+                                <span class="overall-score-max">/100</span>
+                            </div>
+                        </div>
+                        <div class="overall-rating-badge" id="overallRatingBadge">GRADE A // EXCELLENT</div>
+                        <p class="overall-summary-text" id="overallSummaryText">
+                            Optimal TLS encryption, strong link health, and fast response latency.
+                        </p>
+                    </div>
+
+                    <!-- Right: The 4 Diagnostic Benchmark Bars -->
+                    <div class="scorecard-bars-card">
+                        <div class="scorecard-bars-header">
+                            <span class="bars-col-category">BENCHMARK</span>
+                            <span class="bars-col-ascii">DIAGNOSTIC MATRIX</span>
+                            <span class="bars-col-score">SCORE</span>
+                        </div>
+
+                        <!-- 1. Performance -->
+                        <div class="scorecard-bar-row bar-row-performance">
+                            <div class="bar-info">
+                                <span class="bar-indicator dot-cyan"></span>
+                                <span class="bar-name">Performance</span>
+                            </div>
+                            <div class="bar-visual-wrap">
+                                <div class="bar-ascii-text font-mono" id="asciiBarPerformance">
+                                    <span class="blocks-filled">████████</span><span class="blocks-empty">░░</span>
+                                </div>
+                                <div class="bar-meter-track">
+                                    <div class="bar-meter-fill fill-cyan" id="meterFillPerformance" style="width: 82%;"></div>
+                                </div>
+                                <span class="bar-sub-status" id="barStatusPerformance">240 ms &bull; Fast</span>
+                            </div>
+                            <div class="bar-score-wrap">
+                                <span class="bar-numeric-score score-cyan" id="scoreValPerformance">82</span>
+                            </div>
+                        </div>
+
+                        <!-- 2. Security -->
+                        <div class="scorecard-bar-row bar-row-security">
+                            <div class="bar-info">
+                                <span class="bar-indicator dot-emerald"></span>
+                                <span class="bar-name">Security</span>
+                            </div>
+                            <div class="bar-visual-wrap">
+                                <div class="bar-ascii-text font-mono" id="asciiBarSecurity">
+                                    <span class="blocks-filled">███████</span><span class="blocks-empty">░░░</span>
+                                </div>
+                                <div class="bar-meter-track">
+                                    <div class="bar-meter-fill fill-emerald" id="meterFillSecurity" style="width: 75%;"></div>
+                                </div>
+                                <span class="bar-sub-status" id="barStatusSecurity">6 / 8 Headers</span>
+                            </div>
+                            <div class="bar-score-wrap">
+                                <span class="bar-numeric-score score-emerald" id="scoreValSecurity">75</span>
+                            </div>
+                        </div>
+
+                        <!-- 3. SSL -->
+                        <div class="scorecard-bar-row bar-row-ssl">
+                            <div class="bar-info">
+                                <span class="bar-indicator dot-purple"></span>
+                                <span class="bar-name">SSL</span>
+                            </div>
+                            <div class="bar-visual-wrap">
+                                <div class="bar-ascii-text font-mono" id="asciiBarSsl">
+                                    <span class="blocks-filled">██████████</span><span class="blocks-empty"></span>
+                                </div>
+                                <div class="bar-meter-track">
+                                    <div class="bar-meter-fill fill-purple" id="meterFillSsl" style="width: 100%;"></div>
+                                </div>
+                                <span class="bar-sub-status" id="barStatusSsl">Valid &bull; TLS 1.3</span>
+                            </div>
+                            <div class="bar-score-wrap">
+                                <span class="bar-numeric-score score-purple" id="scoreValSsl">100</span>
+                            </div>
+                        </div>
+
+                        <!-- 4. Links -->
+                        <div class="scorecard-bar-row bar-row-links">
+                            <div class="bar-info">
+                                <span class="bar-indicator dot-rose"></span>
+                                <span class="bar-name">Links</span>
+                            </div>
+                            <div class="bar-visual-wrap">
+                                <div class="bar-ascii-text font-mono" id="asciiBarLinks">
+                                    <span class="blocks-filled">█████████</span><span class="blocks-empty">░</span>
+                                </div>
+                                <div class="bar-meter-track">
+                                    <div class="bar-meter-fill fill-rose" id="meterFillLinks" style="width: 94%;"></div>
+                                </div>
+                                <span class="bar-sub-status" id="barStatusLinks">94% Healthy</span>
+                            </div>
+                            <div class="bar-score-wrap">
+                                <span class="bar-numeric-score score-rose" id="scoreValLinks">94</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Raw Terminal Block (Collapsible) -->
+                <div class="terminal-card hidden" id="rawTerminalCard">
+                    <div class="terminal-bar">
+                        <div class="terminal-dots">
+                            <span class="dot-red"></span>
+                            <span class="dot-yellow"></span>
+                            <span class="dot-green"></span>
+                        </div>
+                        <span class="terminal-title">CYBER_BENCHMARK_STDOUT.LOG</span>
+                        <button type="button" class="terminal-copy-inline" id="copyRawTerminalBtn">Copy Raw Output</button>
+                    </div>
+                    <pre class="terminal-code font-mono" id="rawTerminalOutput">Performance     ████████░░  82
+Security        ███████░░░  75
+SSL             ██████████ 100
+Links           █████████░  94</pre>
+                </div>
+            </div>
+
+            <!-- Issues & Recommendations Section -->
+            <div class="issues-container" id="issuesContainer">
+                <div class="issues-header">
+                    <div class="issues-title-group">
+                        <div class="issues-badge">DIAGNOSTIC FINDINGS &amp; REMEDIATION</div>
+                        <h3 class="issues-title">Issues, Warnings &amp; Hardening Recommendations</h3>
+                    </div>
+                    <div class="issues-summary-badge" id="issuesSummaryBadge">0 Findings</div>
+                </div>
+                <div class="issues-list" id="issuesList">
+                    <!-- Populated dynamically based on scan results -->
+                </div>
+            </div>
+
+            <!-- 4 Module Cards Grid (Detailed Technical Report) -->
             <div class="cards-grid">
                 <!-- Card 1: Server Response Time -->
                 <div class="dashboard-card card-latency" id="cardLatency">
@@ -157,6 +325,11 @@
                         <div class="metric-tags">
                             <span class="badge" id="cardLatencyBadge">Fast</span>
                             <span class="badge badge-subtle" id="cardHttpCodeBadge">HTTP 200</span>
+                        </div>
+                        <div class="card-mini-bar">
+                            <span class="card-mini-bar-label">Performance</span>
+                            <span class="card-mini-bar-blocks font-mono" id="miniBarLatencyBlocks"><span class="blocks-filled">████████</span><span class="blocks-empty">░░</span></span>
+                            <span class="card-mini-bar-score score-cyan" id="miniBarLatencyScore">82</span>
                         </div>
                         <div class="metric-detail-list">
                             <div class="detail-row">
@@ -195,6 +368,11 @@
                         </div>
                         <div class="metric-tags">
                             <span class="badge" id="cardHeadersBadge">Audit Ready</span>
+                        </div>
+                        <div class="card-mini-bar">
+                            <span class="card-mini-bar-label">Security</span>
+                            <span class="card-mini-bar-blocks font-mono" id="miniBarHeadersBlocks"><span class="blocks-filled">███████</span><span class="blocks-empty">░░░</span></span>
+                            <span class="card-mini-bar-score score-emerald" id="miniBarHeadersScore">75</span>
                         </div>
                         <div class="metric-detail-list">
                             <div class="detail-row">
@@ -236,6 +414,11 @@
                             <span class="badge" id="cardSslDaysBadge">-- days remaining</span>
                             <span class="badge" id="cardSslMatchBadge">Hostname Match &check;</span>
                         </div>
+                        <div class="card-mini-bar">
+                            <span class="card-mini-bar-label">SSL</span>
+                            <span class="card-mini-bar-blocks font-mono" id="miniBarSslBlocks"><span class="blocks-filled">██████████</span></span>
+                            <span class="card-mini-bar-score score-purple" id="miniBarSslScore">100</span>
+                        </div>
                         <div class="metric-detail-list">
                             <div class="detail-row">
                                 <span class="d-label">Issuer:</span>
@@ -275,6 +458,11 @@
                         </div>
                         <div class="metric-tags">
                             <span class="badge" id="cardLinksBadge">0 Working</span>
+                        </div>
+                        <div class="card-mini-bar">
+                            <span class="card-mini-bar-label">Links</span>
+                            <span class="card-mini-bar-blocks font-mono" id="miniBarLinksBlocks"><span class="blocks-filled">█████████</span><span class="blocks-empty">░</span></span>
+                            <span class="card-mini-bar-score score-rose" id="miniBarLinksScore">94</span>
                         </div>
                         <div class="metric-detail-list">
                             <div class="detail-row">
@@ -445,6 +633,9 @@
         <p>CyberScan Website Diagnostics Platform &bull; Java Spring Boot &bull; REST API &bull; MySQL Database</p>
     </footer>
 
-    <script src="js/app.js"></script>
+    <!-- Toast Notification -->
+    <div id="cyberToast" class="cyber-toast hidden">Copied ASCII report to clipboard!</div>
+
+    <script src="js/app.js?v=3.0"></script>
 </body>
 </html>

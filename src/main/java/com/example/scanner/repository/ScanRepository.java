@@ -13,6 +13,7 @@ public interface ScanRepository extends JpaRepository<Scan, Long> {
 
     List<Scan> findAllByOrderByScanDateDesc();
 
-    @EntityGraph(attributePaths = {"securityHeaders", "brokenLinkList"})
-    Optional<Scan> findWithDetailsById(Long id);
+    default Optional<Scan> findWithDetailsById(Long id) {
+        return findById(id);
+    }
 }

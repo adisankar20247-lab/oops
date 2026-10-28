@@ -6,6 +6,16 @@ spring:
     name: website-scanner
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:h2}
+  web:
+    resources:
+      static-locations: classpath:/static/,classpath:/public/,classpath:/resources/,classpath:/META-INF/resources/
+      chain:
+        cache: false
+      cache:
+        period: 0
+        cachecontrol:
+          no-cache: true
+          must-revalidate: true
   jpa:
     open-in-view: false
     hibernate:
